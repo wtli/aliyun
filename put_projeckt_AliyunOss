@@ -1,0 +1,30 @@
+import oss2, uuid pywebio
+from pywebio.input import file_upload
+from pywebio.output import put_text, put_image
+
+
+
+class AliyunOss(object):
+
+    def __init__(self):
+        self.access_key_id = "xxxxxxxxx"
+        self.access_key_secret = "xxxxxx"
+        self.auth = oss2.Auth(self.access_key_id, self.access_key_secret)
+        self.bucket_name = 'xxxxxxx'
+        self.endpoint = "oss-cn-shanghai.aliyuncs.com"
+        self.bucket = oss2.Bucket(self.auth, self.endpoint, self.bucket_name)
+
+    def projeckup(self):
+        imgs = file_upload("Select some pictures:", accept="image/*", multiple=True)
+
+        for img in imgs:
+            name = uuid.uuid4()
+            filename = 'online/source/image/' + str(name) + '.png'
+            self.bucket.put_object(filename, img['content'])
+            put_image(img['content'])
+            put_text("https://{}.{}/{}".format(self.bucket_name, self.endpoint, filename))
+
+
+aliyunoss = AliyunOss()
+aliyunoss.projeckup()    #本地测试环境调试使用
+#pywebio.start_server(aliyunoss.projeckup, port=5500)  #上线使用
