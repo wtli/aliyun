@@ -1,4 +1,4 @@
-import oss2, uuid pywebio
+import oss2, uuid, pywebio
 from pywebio.input import file_upload
 from pywebio.output import put_text, put_image
 
